@@ -40,18 +40,30 @@ namespace Desas
             bool pareiziba;
             do
             {
-                int input = Convert.ToInt32(Console.ReadLine());
-
-                if (ievade[input-1] == "O" || ievade[input-1] == "X")
+                try
                 {
-                    Console.WriteLine();
-                    Console.WriteLine("LAUCINS JAU IR AIZNEMTS, " + x + ". speletajam jaievada velreiz:");
-                    pareiziba = false;
+                    int input = Convert.ToInt32(Console.ReadLine());
+                    if (input > 9 || input < 1)
+                    {
+                        Console.WriteLine("Nepareizs skaitlis, jaievada no 1 lidz 9. Ievadi velreiz: ");
+                        pareiziba = false;
+                    }
+                    else if (ievade[input - 1] == "O" || ievade[input - 1] == "X")
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("LAUCINS JAU IR AIZNEMTS! " + x + ". speletajam jaievada velreiz:");
+                        pareiziba = false;
+                    }
+                    else
+                    {
+                        ievade[input - 1] = a;
+                        pareiziba = true;
+                    }
                 }
-                else
+                catch
                 {
-                    ievade[input - 1] = a;
-                    pareiziba = true;
+                    Console.WriteLine("Nepareiza ievade, jaievada skaitlis no 1 lidz 9. Ievadi velreiz:");
+                    pareiziba = false;
                 }
             } while (pareiziba == false);
 

@@ -5,3 +5,10 @@ D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\obj\Debug\Desas.csprojAss
 D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\obj\Debug\Desas.csproj.CoreCompileInputs.cache
 D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\obj\Debug\Desas.exe
 D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\obj\Debug\Desas.pdb
+D:\Emils\Documents\GitHub\Csharp-Desas\Desas\Desas\bin\Debug\Desas.exe.config
+D:\Emils\Documents\GitHub\Csharp-Desas\Desas\Desas\bin\Debug\Desas.exe
+D:\Emils\Documents\GitHub\Csharp-Desas\Desas\Desas\bin\Debug\Desas.pdb
+D:\Emils\Documents\GitHub\Csharp-Desas\Desas\Desas\obj\Debug\Desas.csprojAssemblyReference.cache
+D:\Emils\Documents\GitHub\Csharp-Desas\Desas\Desas\obj\Debug\Desas.csproj.CoreCompileInputs.cache
+D:\Emils\Documents\GitHub\Csharp-Desas\Desas\Desas\obj\Debug\Desas.exe
+D:\Emils\Documents\GitHub\Csharp-Desas\Desas\Desas\obj\Debug\Desas.pdb
