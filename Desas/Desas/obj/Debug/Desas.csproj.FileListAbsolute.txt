@@ -1,0 +1,7 @@
+D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\bin\Debug\Desas.exe.config
+D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\bin\Debug\Desas.exe
+D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\bin\Debug\Desas.pdb
+D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\obj\Debug\Desas.csprojAssemblyReference.cache
+D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\obj\Debug\Desas.csproj.CoreCompileInputs.cache
+D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\obj\Debug\Desas.exe
+D:\Emils\Documents\GitHub\NodarbibasCSharp\Desas\Desas\obj\Debug\Desas.pdb
