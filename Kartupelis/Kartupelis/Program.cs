@@ -10,27 +10,41 @@ namespace Kartupelis
     {
         static void Main(string[] args)
         {
-
-            Ievade.LaukumaIevade(Ievade.laukums1); // 1. spēlētāja laukums
-            Laukumi.Laukums(Ievade.laukums1); // 1. spēlētāja laukums
-
-            Console.WriteLine();
-
-            Ievade.SpeletajaIevade(); // japievieno parametri - kurš spēlētājs ievada un tā paša spēlētāja laukums
-
+            // izveido visus laukumus un aizpilda ar " " 
+            Ievade.LaukumaIevade(Ievade.laukums1); // 1. spēlētāja laukums ievadīts ar " "
+            Ievade.LaukumaIevade(Ievade.laukums2); // 2. spēlētāja laukums ievadīts ar " "
             Ievade.LaukumaIevade(Ievade.laukumsIevade1); // izveido 1. spēlētāja ievades laukumu
+            Ievade.LaukumaIevade(Ievade.laukumsIevade2); // izveido 2. spēlētāja ievades laukumu
+            
+            // sākas spēle, no šejienes atveras konsole
+            Console.WriteLine("***********   Kartupelis   ************");
+            At(); // atstarpe
+            Laukumi.Laukums(Ievade.laukums1); // kā paraugs parādīts spēles sākumā
+            At();
 
-            Console.WriteLine(); // pagaidu
-            Console.WriteLine(); // pagaidu
-            Console.WriteLine(); // pagaidu
+            // spēlētāji ievada savus kuģus
+            Ievade.SpeletajaIevade(1, Ievade.laukums1); // 1. spēlētājs ievada kuģus
+            At();
+            Console.WriteLine("***   1. spēlētājs laukumu ir ievadījis   ***");
+            At();
+            Laukumi.Laukums(Ievade.laukums2); // 2. spēlētāja laukums kā paraugs pirms kuģu ievadīšanas
+            At();
+            Ievade.SpeletajaIevade(2, Ievade.laukums2); // 2. spēlētājs ievada kuģus
+            At();
+            At();
+            At();
+            Console.WriteLine("***   Visi kuģi ir ievadīti! Laiks vinus sašaut! ***");
 
-            Console.WriteLine("Visi kuģi ir ievadīti! Laiks vinus sašaut! ");
-            Laukumi.Laukums(Ievade.laukumsIevade1); // principā parāda tukšu laukumu
-
+            // notiek gājieni (šaušana)
             Ievade.Spelet();
             
 
             Console.ReadKey();
+        }
+
+        public static void At()
+        {
+            Console.WriteLine();
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Kartupelis
     {
         public static String[,] laukums1 = new string[10, 10]; // 1. spēlētāja laukums ar ievadītajiem kuģiem
         public static String[,] laukumsIevade1 = new string[10, 10]; // 1. spēlētāja ievades laukums 
+        public static String[,] laukums2 = new string[10, 10]; // 2. spēlētāja laukums ar kuģiem
+        public static String[,] laukumsIevade2 = new string[10, 10]; // 2. spēlētāja ievade
 
         public static void LaukumaIevade(String[,] laukums)
         {
@@ -30,13 +32,13 @@ namespace Kartupelis
         public static int sp1k3 = 0;
         public static int sp1k4 = 0;
 
-        public static void SpeletajaIevade()
+        public static void SpeletajaIevade(int nr, String[,] laukums)
         {
 
             do
             {
 
-                Console.WriteLine("********   " + 1 + ". speletajs ievada savus kugus   ********");
+                Console.WriteLine("********   " + nr + ". speletajs ievada savus kugus   ********");
 
                 // Jāpievieno kuģa ievade horizontāli vai vertikāli
                 // by default kuģis horizontāls
@@ -52,31 +54,31 @@ namespace Kartupelis
                 {
                     case 1:
                         {
-                            laukums1[x - 1, y - 1] = "X"; 
+                            laukums[x - 1, y - 1] = "X"; 
                             sp1k1++;           // jānosaka arī limits kuģu ievadei ar if
                             break;
                         }
                     case 2:
                         {
-                            laukums1[x - 1, y - 1] = "X";
-                            laukums1[x - 1, y] = "X"; // ievada arī blakus lauciņu
+                            laukums[x - 1, y - 1] = "X";
+                            laukums[x - 1, y] = "X"; // ievada arī blakus lauciņu
                             sp1k2++;
                             break;
                         }
                     case 3:
                         {
-                            laukums1[x - 1, y - 1] = "X";
-                            laukums1[x - 1, y] = "X";
-                            laukums1[x - 1, y + 1] = "X";
+                            laukums[x - 1, y - 1] = "X";
+                            laukums[x - 1, y] = "X";
+                            laukums[x - 1, y + 1] = "X";
                             sp1k3++;
                             break;
                         }
                     case 4:
                         {
-                            laukums1[x - 1, y - 1] = "X";
-                            laukums1[x - 1, y] = "X";
-                            laukums1[x - 1, y + 1] = "X";
-                            laukums1[x - 1, y + 2] = "X";
+                            laukums[x - 1, y - 1] = "X";
+                            laukums[x - 1, y] = "X";
+                            laukums[x - 1, y + 1] = "X";
+                            laukums[x - 1, y + 2] = "X";
                             sp1k4++;
                             break;
                         }
@@ -87,38 +89,47 @@ namespace Kartupelis
                         }
                 }
 
-                Laukumi.Laukums(laukums1);
+                Laukumi.Laukums(laukums);
 
             } while (/*sp1k1 < 4 || sp1k2 < 3 || sp1k3 < 2 ||*/ sp1k4 < 1); // komentārs kamēr spēli testējam
-
-
+            
         }
 
-        public static void Gajiens(int nr) // jāpievieno pretinieku laukumi 
+        public static void Gajiens(int nr, String[,] laukums, String[,] laukumsIevade) // jāpievieno pretinieku laukumi 
         {
             bool trapijums; // nosaka vai gājiena laikā ir trāpīts, ja true - Gajiens atkārtojas
 
+            Console.WriteLine("***************************************");
+            Console.WriteLine("********   " + nr + ". spēlētājs sauj   ********");
+            Console.WriteLine("Līdz šim sašauts:");
+            Console.WriteLine(); // atstarpe
+            Laukumi.Laukums(laukumsIevade); // parāda līdzšinējo laukumu pirms šaušanas
+            Console.WriteLine(); // atstarpe
+
             do
             {
-                Console.WriteLine("********   " + nr + ". spēlētājs sauj   ********");
+                
                 Console.WriteLine("Ievadiet saviena rindu:");
                 int x = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Ievadiet saviena kolonnu:");
                 int y = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine();
 
-                if (laukums1[x - 1, y - 1] == "X") // pārbauda pretinieka laukumu, vai tajā vietā ir kuģis
+                if (laukums[x - 1, y - 1] == "X") // pārbauda pretinieka laukumu, vai tajā vietā ir kuģis
                 {
-                    laukumsIevade1[x - 1, y - 1] = "X"; // trāpijumā aizvieto Ievades laukuma konkrēto vietu ar X
+                    laukumsIevade[x - 1, y - 1] = "X"; // trāpijumā aizvieto Ievades laukuma konkrēto vietu ar X
                     trapijums = true;
+                    
+                    Console.WriteLine("****   TRAPITS   ****");
                 }
                 else
                 {
-                    laukumsIevade1[x - 1, y - 1] = "O"; // ja netrāpa - Ievades laukumu aizvieto ar O
+                    laukumsIevade[x - 1, y - 1] = "O"; // ja netrāpa - Ievades laukumu aizvieto ar O
                     trapijums = false;
                 }
-
-                Console.WriteLine();
-                Laukumi.Laukums(laukumsIevade1); // izvada laukumu pēc katra gājiena
+                
+                Console.WriteLine("Laukums pēc šāviena:");
+                Laukumi.Laukums(laukumsIevade); // izvada laukumu pēc šāviena 
                 Console.WriteLine();
 
             } while (trapijums == true);
@@ -128,21 +139,22 @@ namespace Kartupelis
         public static void Spelet()
         {
             int gajiens = 1;
-            do
 
+            do
             {
                 if (gajiens == 1)
                 {
-                    Gajiens(1); // gājiens 1. spēlētājam
+                    Gajiens(1, laukums2, laukumsIevade1); // gājiens 1. spēlētājam
                     gajiens++;
                 }
                 else
                 {
-                    Gajiens(2); // gājiens 2. spēlētājam
+                    Gajiens(2, laukums1, laukumsIevade2); // gājiens 2. spēlētājam
                     gajiens--;
                 }
 
             } while (true); // pagaidām kamēr spēli testējam
         }
+
     }
 }
