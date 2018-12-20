@@ -10,39 +10,56 @@ namespace Kartupelis
     {
         static void Main(string[] args)
         {
-            // izveido visus laukumus un aizpilda ar " " 
-            Ievade.LaukumaIevade(Ievade.laukums1); // 1. spēlētāja laukums ievadīts ar " "
-            Ievade.LaukumaIevade(Ievade.laukums2); // 2. spēlētāja laukums ievadīts ar " "
-            Ievade.LaukumaIevade(Ievade.laukumsIevade1); // izveido 1. spēlētāja ievades laukumu
-            Ievade.LaukumaIevade(Ievade.laukumsIevade2); // izveido 2. spēlētāja ievades laukumu
-            
-            // sākas spēle, no šejienes atveras konsole
-            Console.WriteLine("***********   KUGI   ************\n");
-            Laukumi.Laukums(Ievade.laukums1); // kā paraugs parādīts spēles sākumā
-            At();
+            String atkartot; // spēles atkārtošanai
+            do
+            {
+                // reseto punktu skaitu
+                Ievade.punkti1 = 0;
+                Ievade.punkti2 = 0;
+                // reseto kuģu skaitītāju
+                Ievade.kugis1 = 0; 
+                Ievade.kugis2 = 0;
+                Ievade.kugis3 = 0;
+                Ievade.kugis4 = 0;
+                // izveido visus laukumus un aizpilda ar " " 
+                Ievade.LaukumaIevade(Ievade.laukums1); // 1. spēlētāja laukums 
+                Ievade.LaukumaIevade(Ievade.laukums2); // 2. spēlētāja laukums 
+                Ievade.LaukumaIevade(Ievade.laukumsIevade1); // 1. spēlētāja ievades laukums
+                Ievade.LaukumaIevade(Ievade.laukumsIevade2); // 2. spēlētāja ievades laukums
 
-            // spēlētāji ievada savus kuģus
-            Ievade.SpeletajaIevade(1, Ievade.laukums1); // 1. spēlētājs ievada kuģus
-            At();
-            Console.WriteLine("***   1. spēlētājs laukumu ir ievadījis   ***\n");
-            Laukumi.Laukums(Ievade.laukums2); // 2. spēlētāja laukums kā paraugs pirms kuģu ievadīšanas
-            At();
 
-            Ievade.kugis1 = 0; // reseto kuģu skaitītāju
-            Ievade.kugis2 = 0;
-            Ievade.kugis3 = 0;
-            Ievade.kugis4 = 0;
-            Ievade.SpeletajaIevade(2, Ievade.laukums2); // 2. spēlētājs ievada kuģus
+                // sākas spēle, no šejienes atveras konsole
+                Console.WriteLine("***********   KUGI   ************\n");
+                Laukumi.Laukums(Ievade.laukums1); // kā paraugs parādīts spēles sākumā
+                At(); // atstarpe
 
-            At();
-            At();
-            At();
-            Console.WriteLine("***   Visi kuģi ir ievadīti! Laiks vinus sašaut! ***\n");
+                // spēlētāji ievada savus kuģus
+                Ievade.SpeletajaIevade(1, Ievade.laukums1); // 1. spēlētājs ievada kuģus
+                Console.WriteLine("\n\n\n\n\n\n\n\n\n\n***   1. spēlētājs laukumu ir ievadījis   ***\n");
 
-            // notiek gājieni (šaušana)
-            Ievade.Spelet();
-            
+                // reseto kuģu skaitītājus pirms 2. spēlētāja ievades
+                Ievade.kugis1 = 0; 
+                Ievade.kugis2 = 0;
+                Ievade.kugis3 = 0;
+                Ievade.kugis4 = 0;
+                
+                Laukumi.Laukums(Ievade.laukums2); // 2. spēlētāja laukums kā paraugs pirms kuģu ievadīšanas
+                At();
+                Ievade.SpeletajaIevade(2, Ievade.laukums2); // 2. spēlētājs ievada kuģus
 
+                At();
+                At();
+                At();
+                Console.WriteLine("\n\n\n\n\n\n\n\n\n\n***   Visi kuģi ir ievadīti! Laiks vinus sašaut! ***\n");
+
+                // notiek gājieni (šaušana)
+                Ievade.Spelet();
+
+                // pēc kāda spēlētāja uzvaras piedāvā atkārtot spēli
+                Console.WriteLine("Spēle beigusies! Raksi 'yes', lai atkārtotu!");
+                atkartot = Console.ReadLine();
+
+            } while (atkartot == "yes");
             Console.ReadKey();
         }
 

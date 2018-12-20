@@ -36,17 +36,15 @@ namespace Kartupelis
         public static void SpeletajaIevade(int nr, String[,] laukums)
         {
             bool ievadits = false;
-            Console.WriteLine("********   " + nr + ". speletajs ievada savus kugus   ********");
+            Console.WriteLine("***   " + nr + ". speletajs ievada savus kugus   ***");
             Console.WriteLine();
             do
             {
-                // Jāpievieno kuģa ievade horizontāli vai vertikāli
-                // by default kuģis horizontāls
                 Console.WriteLine("Ievadiet kuģa garumu no 1 līdz 4:");
                 do
                 {
                     String temp = Console.ReadLine();
-                    if (Regex.IsMatch(temp, @"^[0-9]+$")) // pārbauda vai tikai cipari ir ievadīti
+                    if (Regex.IsMatch(temp, "[0-9]")) // pārbauda vai tikai cipari ir ievadīti
                     {
                         g = Convert.ToInt32(temp); // ja tikai cipari - konvertē par integer
                     }
@@ -99,6 +97,29 @@ namespace Kartupelis
                 } while (ievadits == false);
                 ievadits = false;
 
+                String virziens = "";
+                
+                Console.WriteLine("Horizontāli 'H' vai vertikāli 'V'?");
+                do
+                {
+                    String virziensIevadits = Console.ReadLine();
+                    if (Regex.IsMatch(virziensIevadits, "[a-zA-Z]"))
+                    {
+                        virziens = virziensIevadits.ToUpper();
+                    }
+
+                    if (virziens == "V" || virziens == "H")
+                    {
+                        ievadits = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Kļūda ievadē! Virziens jāizvēlas 'H' vai 'V'!");
+                        ievadits = false;
+                    }
+                } while (ievadits == false);
+                ievadits = false;
+
                 // koordinātas kuģu ievadīšanai
                 int x = 0; // piešķirta default vērtībā
                 int y = 0;
@@ -115,7 +136,7 @@ namespace Kartupelis
                         {
                             temp = Console.ReadLine();
 
-                            if (Regex.IsMatch(temp, @"^[0-9]+$")) // pārbauda vai tikai cipari ir ievadīti
+                            if (Regex.IsMatch(temp, "[0-9]")) // pārbauda vai tikai cipari ir ievadīti
                             {
                                 x = Convert.ToInt32(temp); // ja tikai cipari - konvertē par integer
                             }
@@ -136,7 +157,7 @@ namespace Kartupelis
                         do
                         {
                             temp = Console.ReadLine();
-                            if (Regex.IsMatch(temp, @"^[a-zA-Z]+$")) // pārbauda vai tikai burti ir ievadīti
+                            if (Regex.IsMatch(temp, "[a-zA-Z]")) // pārbauda vai tikai burti ir ievadīti
                             {
                                 kol = temp.ToUpper();
                                 ievadits = true;
@@ -198,71 +219,135 @@ namespace Kartupelis
 
                         bool jauAiznemts = false; // nosaka vai koordinātas ievadāmajam kuģim ir jau aizņemtas
 
-                        switch (g)
+
+
+                        if (virziens == "H")
                         {
-                            case 1:
-                                {
-                                    if (laukums[x - 1, y - 1] != "X")
+                            switch (g)
+                            {
+                                case 1:
                                     {
-                                        laukums[x - 1, y - 1] = "X";
-                                        kugis1++;
+                                        if (laukums[x - 1, y - 1] != "X")
+                                        {
+                                            laukums[x - 1, y - 1] = "X";
+                                            kugis1++;
+                                        }
+                                        else
+                                        {
+                                            jauAiznemts = true;
+                                        }
+                                        break;
                                     }
-                                    else
+                                case 2:
                                     {
-                                        jauAiznemts = true;
+                                        if (laukums[x - 1, y - 1] == "X" || laukums[x - 1, y] == "X")
+                                        {
+                                            jauAiznemts = true;
+                                        }
+                                        else
+                                        {
+                                            laukums[x - 1, y - 1] = "X";
+                                            laukums[x - 1, y] = "X"; // ievada arī blakus lauciņu
+                                            kugis2++;
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case 2:
-                                {
-                                    if (laukums[x - 1, y - 1] == "X" || laukums[x - 1, y] == "X")
+                                case 3:
                                     {
-                                        jauAiznemts = true;
+                                        if (laukums[x - 1, y - 1] == "X" || laukums[x - 1, y] == "X" || laukums[x - 1, y + 1] == "X")
+                                        {
+                                            jauAiznemts = true;
+                                        }
+                                        else
+                                        {
+                                            laukums[x - 1, y - 1] = "X";
+                                            laukums[x - 1, y] = "X";
+                                            laukums[x - 1, y + 1] = "X";
+                                            kugis3++;
+                                        }
+                                        break;
                                     }
-                                    else
+                                case 4:
                                     {
-                                        laukums[x - 1, y - 1] = "X";
-                                        laukums[x - 1, y] = "X"; // ievada arī blakus lauciņu
-                                        kugis2++;
+                                        if (laukums[x - 1, y - 1] == "X" || laukums[x - 1, y] == "X" || laukums[x - 1, y + 1] == "X" || laukums[x - 1, y + 2] == "X")
+                                        {
+                                            jauAiznemts = true;
+                                        }
+                                        else
+                                        {
+                                            laukums[x - 1, y - 1] = "X";
+                                            laukums[x - 1, y] = "X";
+                                            laukums[x - 1, y + 1] = "X";
+                                            laukums[x - 1, y + 2] = "X";
+                                            kugis4++;
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case 3:
-                                {
-                                    if (laukums[x - 1, y - 1] == "X" || laukums[x - 1, y] == "X" || laukums[x - 1, y + 1] == "X")
+                            }
+                        }
+                        else // ja virziens ir vertikāls
+                        {
+                            switch (g)
+                            {
+                                case 1:
                                     {
-                                        jauAiznemts = true;
+                                        if (laukums[x - 1, y - 1] != "X")
+                                        {
+                                            laukums[x - 1, y - 1] = "X";
+                                            kugis1++;
+                                        }
+                                        else
+                                        {
+                                            jauAiznemts = true;
+                                        }
+                                        break;
                                     }
-                                    else
+                                case 2:
                                     {
-                                        laukums[x - 1, y - 1] = "X";
-                                        laukums[x - 1, y] = "X";
-                                        laukums[x - 1, y + 1] = "X";
-                                        kugis3++;
+                                        if (laukums[x - 1, y - 1] == "X" || laukums[x, y - 1] == "X")
+                                        {
+                                            jauAiznemts = true;
+                                        }
+                                        else
+                                        {
+                                            laukums[x - 1, y - 1] = "X";
+                                            laukums[x, y - 1] = "X"; // ievada arī blakus lauciņu
+                                            kugis2++;
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            case 4:
-                                {
-                                    if (laukums[x - 1, y - 1] == "X" || laukums[x - 1, y] == "X" || laukums[x - 1, y + 1] == "X" || laukums[x - 1, y + 2] == "X")
+                                case 3:
                                     {
-                                        jauAiznemts = true;
+                                        if (laukums[x - 1, y - 1] == "X" || laukums[x, y - 1] == "X" || laukums[x + 1, y - 1] == "X")
+                                        {
+                                            jauAiznemts = true;
+                                        }
+                                        else
+                                        {
+                                            laukums[x - 1, y - 1] = "X";
+                                            laukums[x, y] = "X";
+                                            laukums[x + 1, y + 1] = "X";
+                                            kugis3++;
+                                        }
+                                        break;
                                     }
-                                    else
+                                case 4:
                                     {
-                                        laukums[x - 1, y - 1] = "X";
-                                        laukums[x - 1, y] = "X";
-                                        laukums[x - 1, y + 1] = "X";
-                                        laukums[x - 1, y + 2] = "X";
-                                        kugis4++;
+                                        if (laukums[x - 1, y - 1] == "X" || laukums[x, y - 1] == "X" || laukums[x + 1, y - 1] == "X" || laukums[x + 2, y - 1] == "X")
+                                        {
+                                            jauAiznemts = true;
+                                        }
+                                        else
+                                        {
+                                            laukums[x - 1, y - 1] = "X";
+                                            laukums[x, y - 1] = "X";
+                                            laukums[x + 1, y - 1] = "X";
+                                            laukums[x + 2, y - 1] = "X";
+                                            kugis4++;
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
-                            default:
-                                {
-                                    Console.WriteLine("Ievadīts nepareizs kuģa izmērs");
-                                    break;
-                                }
+                            }
                         }
 
                         if (jauAiznemts == true)
@@ -283,58 +368,178 @@ namespace Kartupelis
 
                 Laukumi.Laukums(laukums);
 
-                if (kugis1 == 4 && kugis2 == 3 && kugis3 == 2 && kugis4 == 1)
+                if (kugis1 == 4 && kugis2 == 3 && kugis3 == 2 /*&&*/ || kugis4 == 1) // testa režīmā pietiek ar 1x kugis4
                 {
                     ievadits = true; // ja visi kuģi ievadīti, iziet no do-while cikla
                 }
+
             } while (ievadits == false);
         }
 
+        public static bool uzvara = false; // pārbauda vai izpilījušies uzvaras nosacījumi
+        public static int punkti1 = 0; // skaita punktus spēlētājam
+        public static int punkti2 = 0;
+
         public static void Gajiens(int nr, String[,] laukums, String[,] laukumsIevade) // jāpievieno pretinieku laukumi 
         {
-            bool trapijums; // nosaka vai gājiena laikā ir trāpīts, ja true - Gajiens atkārtojas
+            bool trapijums = false; // nosaka vai gājiena laikā ir trāpīts, ja true - Gajiens atkārtojas
 
             Console.WriteLine("***************************************");
             Console.WriteLine("********   " + nr + ". spēlētājs sauj   ********\n");
             Console.WriteLine("Līdz šim sašauts:");
             Console.WriteLine(); // atstarpe
             Laukumi.Laukums(laukumsIevade); // parāda līdzšinējo laukumu pirms šaušanas
-            Console.WriteLine(); 
+            Console.WriteLine();
 
+            int x = 0; // koordinātas šāvieniem
+            int y = 0;
+            String kol = ""; // kolonnas burts
             do
             {
+                do
+                {
+                    String temp;
+                    try
+                    {
+                        Console.WriteLine("Ievadiet saviena rindu:");
+                        do
+                        {
+                            temp = Console.ReadLine();
 
+                            if (Regex.IsMatch(temp, "[0-9]"))
+                            {
+                                x = Convert.ToInt32(temp);
+                            }
+                            if (x < 11 && x > 0)
+                            {
+                                trapijums = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Kļūda ievadē! Ievadiet vēlreiz rindu no 1 līdz 10:");
+                                trapijums = false;
+                            }
 
-                Console.WriteLine("Ievadiet saviena rindu:");
-                int x = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Ievadiet saviena kolonnu:");
-                int y = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine();
+                        } while (trapijums == false);
+                        trapijums = false;
+
+                        Console.WriteLine("Ievadiet saviena kolonnu:");
+                        do
+                        {
+                            temp = Console.ReadLine();
+                            if (Regex.IsMatch(temp, "[a-zA-Z]"))
+                            {
+                                kol = temp.ToUpper();
+                            }
+
+                            switch (kol)
+                            {
+                                case "K":
+                                    y = 1;
+                                    break;
+                                case "A":
+                                    y = 2;
+                                    break;
+                                case "R":
+                                    y = 3;
+                                    break;
+                                case "T":
+                                    y = 4;
+                                    break;
+                                case "U":
+                                    y = 5;
+                                    break;
+                                case "P":
+                                    y = 6;
+                                    break;
+                                case "E":
+                                    y = 7;
+                                    break;
+                                case "L":
+                                    y = 8;
+                                    break;
+                                case "I":
+                                    y = 9;
+                                    break;
+                                case "S":
+                                    y = 10;
+                                    break;
+                                default:
+                                    y = 11;
+                                    break;
+                            }
+
+                            if (y < 11 && y > 0)
+                            {
+                                trapijums = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Kļūda ievadē! Ievadiet vēlreiz kolonno no K lidz S:");
+                                trapijums = false;
+                            }
+
+                        } while (trapijums == false);
+
+                        /*
+                        if ((x > 0 && x < 11) && (y > 0 && y < 11))
+                        {
+                            trapijums = true;
+                        }
+                        else
+                        {
+                            trapijums = false;
+                        }
+                        */
+
+                    }
+                    catch
+                    {
+                        Console.WriteLine("\nKļūda ievadē! Ievadiet šāviena koordinātas vēlreiz:");
+                        trapijums = false;
+                    }
+
+                } while (trapijums == false);
 
                 if (laukums[x - 1, y - 1] == "X") // pārbauda pretinieka laukumu, vai tajā vietā ir kuģis
                 {
                     laukumsIevade[x - 1, y - 1] = "X"; // trāpijumā aizvieto Ievades laukuma konkrēto vietu ar X
                     trapijums = true;
 
-                    Console.WriteLine("\n*****   TRAPITS   *****\n");
+                    Console.WriteLine("\n********   TRAPITS   ********\n");
+                    Console.WriteLine("****   " + nr + ". spēlētājs sauj vēlreiz   ****\n");
+                    if (nr == 1)
+                    {
+                        punkti1++;
+                    }
+                    else
+                    {
+                        punkti2++;
+                    }
                 }
                 else
                 {
                     laukumsIevade[x - 1, y - 1] = "O"; // ja netrāpa - Ievades laukumu aizvieto ar O
                     trapijums = false;
+
+                    Console.WriteLine("\n***   " + nr + ". spēlētājs netrāpa   ***\n");
                 }
 
                 Console.WriteLine("Laukums pēc šāviena:");
                 Laukumi.Laukums(laukumsIevade); // izvada laukumu pēc šāviena 
                 Console.WriteLine();
 
-                
+                UzvarasParbaude(); // pārbauda vai 1. spēlētājs ir uzvarējis
 
+                if (uzvara == true)
+                {
+                    Console.WriteLine("\n\n*************************************************");
+                    Console.WriteLine("******   Apsveicam! " + nr + ". spēlētājs uzvar!!   ******");
+                    Console.WriteLine("*************************************************\n\n");
+                    break;
+                }
             } while (trapijums == true);
-
         }
-
-        public static bool uzvara = false; // pārbauda vai izpilījušies uzvaras nosacījumi
 
         public static void Spelet()
         {
@@ -346,24 +551,28 @@ namespace Kartupelis
                 {
                     Gajiens(1, laukums2, laukumsIevade1); // gājiens 1. spēlētājam
                     gajiens++;
-                    UzvarasParbaude(1); // pārbauda vai 1. spēlētājs ir uzvarējis
+
                 }
                 else
                 {
                     Gajiens(2, laukums1, laukumsIevade2); // gājiens 2. spēlētājam
                     gajiens--;
-                    UzvarasParbaude(2); // pārbauda vai 2. spēlētājs ir uzvarējis
+
                 }
-
-                
-
-            } while (uzvara == false); 
+            } while (uzvara == false);
         }
 
-        public static void UzvarasParbaude(int nr)
+        public static void UzvarasParbaude()
         {
-            // nosacījumi uzvarai
+            if (punkti1 == 4/*20*/ || punkti2 == 4/*20*/) // testa versijā 4 (jo tikai 1x kugis4), pilnajā 20
+            {
+                uzvara = true;
+            }
+            else
+            {
+                uzvara = false;
+            }
         }
-        
+
     }
 }
