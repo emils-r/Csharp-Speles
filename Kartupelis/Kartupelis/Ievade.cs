@@ -20,7 +20,7 @@ namespace Kartupelis
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    laukums[i, j] = " ";
+                    laukums[i, j] = " "; // savada visu laikumu ar " "
                 }
             }
         }
@@ -35,9 +35,10 @@ namespace Kartupelis
         // Spēlētājs ievada kuģus savā laukumā
         public static void SpeletajaIevade(int nr, String[,] laukums)
         {
-            bool ievadits = false;
+            bool ievadits = false; // šis tiks izmantots, lai noteiktu vai kuģis ir leģitīmi ievietots
             Console.WriteLine("***   " + nr + ". speletajs ievada savus kugus   ***");
             Console.WriteLine();
+
             do
             {
                 Console.WriteLine("Ievadiet kuģa garumu no 1 līdz 4:");
@@ -46,7 +47,7 @@ namespace Kartupelis
                     String temp = Console.ReadLine();
                     if (Regex.IsMatch(temp, "[0-9]")) // pārbauda vai tikai cipari ir ievadīti
                     {
-                        g = Convert.ToInt32(temp); // ja tikai cipari - konvertē par integer
+                        g = Convert.ToInt32(temp); // ja tikai cipari - konvertē par integer, ja nav - nākamajā else izmet "kļūda ievadē"
                     }
 
                     if (g < 5 && g > 0) // pārbauda vai ir starp 1 un 4
@@ -58,9 +59,9 @@ namespace Kartupelis
                         Console.WriteLine("Kļūda ievadē! Jaizvēlas kuga garums no 1 lidz 4, ievadiet garumu velreiz:");
                     }
 
-                    bool parDaudzKugu = false;
+                    bool parDaudzKugu = false; // šis tiek izmantots, lai kuģu skaits noteiktajā izmērā nepārsniedz atļauto
 
-                    switch (g) // pārbauda vai jau ir ievadīti kuģi ar noteikto garumu
+                    switch (g) 
                     {
                         case 1:
                             if (kugis1 == 4)
@@ -95,7 +96,7 @@ namespace Kartupelis
                     }
 
                 } while (ievadits == false);
-                ievadits = false;
+                ievadits = false; // tiek resetots uz false pēc katra do-while, lai neizskrien cauri citiem cikliem
 
                 String virziens = "";
                 
@@ -103,9 +104,9 @@ namespace Kartupelis
                 do
                 {
                     String virziensIevadits = Console.ReadLine();
-                    if (Regex.IsMatch(virziensIevadits, "[a-zA-Z]"))
+                    if (Regex.IsMatch(virziensIevadits, "[a-zA-Z]")) // pieļauj ievadīt gan mazos burtus, gan lielos
                     {
-                        virziens = virziensIevadits.ToUpper();
+                        virziens = virziensIevadits.ToUpper();  // pārveido visus par lielajiem, lai nav tālāk jāizmanto gan lielie, gan mazie
                     }
 
                     if (virziens == "V" || virziens == "H")
@@ -221,7 +222,7 @@ namespace Kartupelis
 
 
 
-                        if (virziens == "H")
+                        if (virziens == "H") // ja virziens horizontāls
                         {
                             switch (g)
                             {
@@ -573,6 +574,5 @@ namespace Kartupelis
                 uzvara = false;
             }
         }
-
     }
 }
