@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kartupelis
+namespace Kugi
 {
     class Laukumi
     {
-        
         public static void Laukums(String[,] b)
         {
             String rinda1 = "   |K|A|R|T|U|P|E|L|I|S|";
