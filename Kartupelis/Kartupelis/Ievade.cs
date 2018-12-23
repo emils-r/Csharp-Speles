@@ -61,7 +61,7 @@ namespace Kartupelis
 
                     bool parDaudzKugu = false; // šis tiek izmantots, lai kuģu skaits noteiktajā izmērā nepārsniedz atļauto
 
-                    switch (g) 
+                    switch (g)
                     {
                         case 1:
                             if (kugis1 == 4)
@@ -82,7 +82,7 @@ namespace Kartupelis
                             }
                             break;
                         case 4:
-                            if (kugis4 == 1)
+                            if (kugis4 == 4) // testa režīmā var būt 4
                             {
                                 parDaudzKugu = true;
                             }
@@ -99,7 +99,7 @@ namespace Kartupelis
                 ievadits = false; // tiek resetots uz false pēc katra do-while, lai neizskrien cauri citiem cikliem
 
                 String virziens = "";
-                
+
                 Console.WriteLine("Horizontāli 'H' vai vertikāli 'V'?");
                 do
                 {
@@ -326,8 +326,8 @@ namespace Kartupelis
                                         else
                                         {
                                             laukums[x - 1, y - 1] = "X";
-                                            laukums[x, y] = "X";
-                                            laukums[x + 1, y + 1] = "X";
+                                            laukums[x, y - 1] = "X";
+                                            laukums[x + 1, y - 1] = "X";
                                             kugis3++;
                                         }
                                         break;
@@ -369,7 +369,7 @@ namespace Kartupelis
 
                 Laukumi.Laukums(laukums);
 
-                if (kugis1 == 4 && kugis2 == 3 && kugis3 == 2 /*&&*/ || kugis4 == 1) // testa režīmā pietiek ar 1x kugis4
+                if (kugis1 == 4 && kugis2 == 3 && kugis3 == 2 /*&&*/ || kugis4 == 4) // testa režīmā pietiek ar 1x kugis4 vai 4x kugis 4
                 {
                     ievadits = true; // ja visi kuģi ievadīti, iziet no do-while cikla
                 }
@@ -482,17 +482,6 @@ namespace Kartupelis
 
                         } while (trapijums == false);
 
-                        /*
-                        if ((x > 0 && x < 11) && (y > 0 && y < 11))
-                        {
-                            trapijums = true;
-                        }
-                        else
-                        {
-                            trapijums = false;
-                        }
-                        */
-
                     }
                     catch
                     {
@@ -502,13 +491,15 @@ namespace Kartupelis
 
                 } while (trapijums == false);
 
-                if (laukums[x - 1, y - 1] == "X") // pārbauda pretinieka laukumu, vai tajā vietā ir kuģis
+                if (laukums[x - 1, y - 1] == "X" && laukumsIevade[x - 1, y - 1] != "X") // pārbauda pretinieka laukumu, vai tajā vietā ir kuģis
                 {
-                    laukumsIevade[x - 1, y - 1] = "X"; // trāpijumā aizvieto Ievades laukuma konkrēto vietu ar X
+
                     trapijums = true;
 
                     Console.WriteLine("\n********   TRAPITS   ********\n");
-                    Console.WriteLine("****   " + nr + ". spēlētājs sauj vēlreiz   ****\n");
+
+                    KuguApkartneVaiVissKugisSasauts(x, y, laukums, laukumsIevade); // TESTĒJAM, izstrādes procesā
+
                     if (nr == 1)
                     {
                         punkti1++;
@@ -517,6 +508,12 @@ namespace Kartupelis
                     {
                         punkti2++;
                     }
+                }
+                else if (laukums[x - 1, y - 1] == "X")
+                {
+                    Console.WriteLine("\nŠis lauciņš jau ir sašauts! Izvēlies citu!");
+
+                    trapijums = true;
                 }
                 else
                 {
@@ -539,6 +536,11 @@ namespace Kartupelis
                     Console.WriteLine("*************************************************\n\n");
                     break;
                 }
+                else if (trapijums == true)
+                {
+                    Console.WriteLine("****   " + nr + ". spēlētājs sauj vēlreiz   ****\n");
+                }
+
             } while (trapijums == true);
         }
 
@@ -552,20 +554,18 @@ namespace Kartupelis
                 {
                     Gajiens(1, laukums2, laukumsIevade1); // gājiens 1. spēlētājam
                     gajiens++;
-
                 }
                 else
                 {
                     Gajiens(2, laukums1, laukumsIevade2); // gājiens 2. spēlētājam
                     gajiens--;
-
                 }
             } while (uzvara == false);
         }
 
         public static void UzvarasParbaude()
         {
-            if (punkti1 == 4/*20*/ || punkti2 == 4/*20*/) // testa versijā 4 (jo tikai 1x kugis4), pilnajā 20
+            if (punkti1 == 22 || punkti2 == 22) // testa versijā 4 (jo tikai 1x kugis4) vai 22 (ja 4x kugis4 un 2x kugis3), pilnajā 20
             {
                 uzvara = true;
             }
@@ -574,5 +574,706 @@ namespace Kartupelis
                 uzvara = false;
             }
         }
+
+        public static void KuguApkartneVaiVissKugisSasauts(int x, int y, String[,] laukums, String[,] laukumsIevade)
+        {
+            // līdz šim nonāk tikai tad, ja ir pirmais trāpījums konkrētajam lauciņam
+            laukumsIevade[x - 1, y - 1] = "X"; // ieliek X sašautajā vietā
+
+            //if (laukums[x - 1, y - 2] == "X" || laukums[x - 1, y] == "X" || laukums[x - 2, y - 1] == "X" || laukums[x, y - 1] == "X") // apkārtējie horizontāli un vertikāli
+
+            // horizontāli pa kreisi (2. X)
+            try
+            {
+                if (laukums[x - 1, y - 2] == "X" && laukums[x - 1, y - 2] == laukumsIevade[x - 1, y - 2]) // 2. pa kreisi IR
+                {
+                    try
+                    {
+                        if (laukums[x - 1, y - 3] == "X" && laukums[x - 1, y - 3] == laukumsIevade[x - 1, y - 3]) // 3. X ir
+                        {
+                            try
+                            {
+                                if (laukums[x - 1, y - 4] == "X" && laukums[x - 1, y - 4] == laukumsIevade[x - 1, y - 4]) // 4. X ir
+                                {
+                                    KuguApkartneViss(x, y - 3, laukums, laukumsIevade); // ievada visus 4
+                                    KuguApkartneViss(x, y - 2, laukums, laukumsIevade);
+                                    KuguApkartneViss(x, y - 1, laukums, laukumsIevade);
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                }
+
+                                if (laukums[x - 1, y - 4] == " ") // 4. X pa kreisi nav
+                                {
+                                    try
+                                    {
+                                        if (laukums[x - 1, y] == "X" && laukums[x - 1, y] == laukumsIevade[x - 1, y]) // pirmais pa labi ir X
+                                        {
+                                            KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // 1. pa labi apvelkas
+                                            KuguApkartneViss(x, y - 2, laukums, laukumsIevade); // 2. pa kreisi
+                                            KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // 1. pa kreisi
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                        }
+                                        if (laukums[x - 1, y] == " ")
+                                        {
+                                            KuguApkartneViss(x, y - 2, laukums, laukumsIevade);
+                                            KuguApkartneViss(x, y - 1, laukums, laukumsIevade);
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        KuguApkartneViss(x, y - 2, laukums, laukumsIevade);
+                                        KuguApkartneViss(x, y - 1, laukums, laukumsIevade);
+                                        KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                if (laukums[x - 1, y] == "X" && laukums[x - 1, y] == laukumsIevade[x - 1, y]) // pirmais pa labi ir X
+                                {
+                                    KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // 1. pa labi apvelkas
+                                    KuguApkartneViss(x, y - 2, laukums, laukumsIevade); // 2. pa kreisi
+                                    KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // 1. pa kreisi
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                }
+                                if (laukums[x - 1, y] == " ") // pirmais pa labi nav
+                                {
+                                    KuguApkartneViss(x, y - 2, laukums, laukumsIevade);
+                                    KuguApkartneViss(x, y - 1, laukums, laukumsIevade);
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                    try
+                    {
+                        if (laukums[x - 1, y - 3] == " ") // 3. X pa kreisi nav 
+                        {
+                            try
+                            {
+                                if (laukums[x - 1, y] == "X" && laukums[x - 1, y] == laukumsIevade[x - 1, y]) // 1. pa labi ir 
+                                {
+                                    try
+                                    {
+                                        if (laukums[x - 1, y + 1] == "X" && laukums[x - 1, y + 1] == laukumsIevade[x - 1, y + 1]) // 2. pa labi ir 
+                                        {
+                                            KuguApkartneViss(x, y + 2, laukums, laukumsIevade); // apvelk 2. pa labi
+                                            KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // apvelk 1. pa labi
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                            KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // un pa 1. kreisi
+                                        }
+                                        if (laukums[x - 1, y + 1] == " ") // 2. pa labi nav
+                                        {
+                                            KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // apvelk 1 pa labi
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                            KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // un pa 1. kreisi
+                                        }
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                            catch // jo 2 izmēru kuģis pašā labajā malā
+                            {
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // un pa 1. kreisi
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        if (laukums[x - 1, y] == "X" && laukums[x - 1, y] == laukumsIevade[x - 1, y]) // 1. pa labi ir 
+                        {
+                            if (laukums[x - 1, y + 1] == "X" && laukums[x - 1, y + 1] == laukumsIevade[x - 1, y + 1]) // 2. pa labi ir
+                            {
+                                KuguApkartneViss(x, y + 2, laukums, laukumsIevade); // apvelk 2. pa labi
+                                KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // apvelk 1. pa labi
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // un pa 1. kreisi
+                            }
+                            if (laukums[x - 1, y + 1] == " ")
+                            {
+                                KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // apvelk 1. pa labi
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // un pa 1. kreisi
+                            }
+                        }
+                    }
+                    try
+                    {
+                        if (laukums[x - 1, y] == " ") // 1. pa labi nav
+                        {
+                            try
+                            {
+                                if (laukums[x - 1, y - 3] == " ") // 1. pa kreisi nav
+                                {
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade); // sašautais
+                                    KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // 1. pa kreisi
+                                }
+                            }
+                            catch
+                            {
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // sašautais
+                                KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // 1. pa kreisi
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+
+
+            // horizontāli pa labi 2. X
+            try
+            {
+                if (laukums[x - 1, y] == "X") // 1. pa labi ir
+                {
+                    if (laukums[x - 1, y] == "X" && laukums[x - 1, y] == laukumsIevade[x - 1, y]) // 2. pa Labi IR
+                    {
+                        try
+                        {
+                            if (laukums[x - 1, y + 1] == "X" && laukums[x - 1, y + 1] == laukumsIevade[x - 1, y + 1]) // 3. X ir
+                            {
+                                try
+                                {
+                                    if (laukums[x - 1, y + 2] == "X" && laukums[x - 1, y + 2] == laukumsIevade[x - 1, y + 2]) // 4. X ir
+                                    {
+                                        KuguApkartneViss(x, y + 3, laukums, laukumsIevade); // ievada visus 4
+                                        KuguApkartneViss(x, y + 2, laukums, laukumsIevade);
+                                        KuguApkartneViss(x, y + 1, laukums, laukumsIevade);
+                                        KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                    }
+                                    if (laukums[x - 1, y + 2] == " ") // 4. X pa labi nav
+                                    {
+                                        try
+                                        {
+                                            if (laukums[x - 1, y - 2] == "X" && laukums[x - 1, y - 2] == laukumsIevade[x - 1, y - 2]) // pirmais pa kreisi ir X
+                                            {
+                                                KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // 1. pa kreisi apvelkas
+                                                KuguApkartneViss(x, y + 2, laukums, laukumsIevade); // 2. pa labi 
+                                                KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // 1. pa labi
+                                                KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                            }
+                                            if (laukums[x - 1, y - 2] == " ")
+                                            {
+                                                KuguApkartneViss(x, y + 2, laukums, laukumsIevade);
+                                                KuguApkartneViss(x, y + 1, laukums, laukumsIevade);
+                                                KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            KuguApkartneViss(x, y + 2, laukums, laukumsIevade); // 2. pa labi 
+                                            KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // 1. pa labi
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    if (laukums[x - 1, y - 2] == "X" && laukums[x - 1, y - 2] == laukumsIevade[x - 1, y - 2]) // pirmais pa kreisi ir X
+                                    {
+                                        KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // 1. pa kreisi apvelkas
+                                        KuguApkartneViss(x, y + 2, laukums, laukumsIevade); // 2. pa labi 
+                                        KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // 1. pa labi
+                                        KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                    }
+                                    if (laukums[x - 1, y - 2] == " ") // pirmais pa kreisi nav
+                                    {
+                                        KuguApkartneViss(x, y + 2, laukums, laukumsIevade); // 2. pa labi apvelkas
+                                        KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // 1. pa labi
+                                        KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                    }
+                                }
+                            }
+
+                            if (laukums[x - 1, y + 1] == " ") // 3. X pa labi nav 
+                            {
+                                try
+                                {
+
+                                    if (laukums[x - 1, y - 2] == "X" && laukums[x - 1, y - 2] == laukumsIevade[x - 1, y - 2]) // 1. pa kreisi ir 
+                                    {
+                                        if (laukums[x - 1, y - 3] == "X" && laukums[x - 1, y - 3] == laukumsIevade[x - 1, y - 3]) // 2. pa kreisi ir 
+                                        {
+                                            KuguApkartneViss(x, y - 2, laukums, laukumsIevade); // apvelk 2. pa kreisi
+                                            KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // apvelk 1. pa kreisi
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                            KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // un pa 1. labi
+                                        }
+                                        if (laukums[x - 1, y - 3] == " ") // 2. pa kreisi nav
+                                        {
+                                            KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // apvelk 1 pa labi
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                            KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // un 1. pa kreisi
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                    KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // un pa 1. labi
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            if (laukums[x - 1, y - 2] == "X" && laukums[x - 1, y - 2] == laukumsIevade[x - 1, y - 2]) // 1. pa kreisi ir 
+                            {
+                                if (laukums[x - 1, y - 3] == "X" && laukums[x - 1, y - 3] == laukumsIevade[x - 1, y - 3]) // 2. pa kreisi ir
+                                {
+                                    KuguApkartneViss(x, y - 2, laukums, laukumsIevade); // apvelk 2. pa kreisi
+                                    KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // apvelk 1. pa labi
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                    KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // un pa 1. kreisi
+                                }
+                                if (laukums[x - 1, y - 3] == " ")
+                                {
+                                    KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // apvelk 1. pa labi
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                    KuguApkartneViss(x, y - 1, laukums, laukumsIevade); // un pa 1. kreisi
+                                }
+                            }
+                        }
+                        try
+                        {
+                            if (laukums[x - 1, y - 2] == " ") // 1. pa kreisi nav
+                            {
+                                try
+                                {
+                                    if (laukums[x - 1, y + 1] == " ") // 2. pa labi nav
+                                    {
+                                        KuguApkartneViss(x, y, laukums, laukumsIevade); // sašautais
+                                        KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // 1. pa labi
+                                    }
+                                }
+                                catch
+                                {
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade); // sašautais
+                                    KuguApkartneViss(x, y + 1, laukums, laukumsIevade); // 1. pa labi
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+
+            // vertikāli uz augšu
+            try
+            {
+                if (laukums[x - 2, y - 1] == "X" && laukums[x - 2, y - 1] == laukumsIevade[x - 2, y - 1]) // 1. uz augšu ir
+                {
+                    try
+                    {
+                        if (laukums[x - 3, y - 1] == "X" && laukums[x - 3, y - 1] == laukumsIevade[x - 3, y - 1]) // 2. uz augšu ir X
+                        {
+                            try
+                            {
+                                if (laukums[x - 4, y - 1] == "X" && laukums[x - 4, y - 1] == laukumsIevade[x - 4, y - 1]) // 3. uz augšu ir X
+                                {
+                                    KuguApkartneViss(x - 3, y, laukums, laukumsIevade); // ievada visus 4
+                                    KuguApkartneViss(x - 2, y, laukums, laukumsIevade);
+                                    KuguApkartneViss(x - 1, y, laukums, laukumsIevade);
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                }
+
+                                if (laukums[x - 4, y - 1] == " ") // 4. X uz augšu nav
+                                {
+                                    try
+                                    {
+                                        if (laukums[x, y - 1] == "X" && laukums[x, y - 1] == laukumsIevade[x, y - 1]) // pirmais uz leju ir X
+                                        {
+                                            KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // 1. uz leju apvelkas
+                                            KuguApkartneViss(x - 2, y, laukums, laukumsIevade); // 2. uz augšu
+                                            KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // 1. uz augšu
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                        }
+                                        if (laukums[x, y - 1] == " ")
+                                        {
+                                            KuguApkartneViss(x - 2, y, laukums, laukumsIevade);
+                                            KuguApkartneViss(x - 1, y, laukums, laukumsIevade);
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        KuguApkartneViss(x - 2, y, laukums, laukumsIevade);
+                                        KuguApkartneViss(x - 1, y, laukums, laukumsIevade);
+                                        KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                if (laukums[x, y - 1] == "X" && laukums[x, y - 1] == laukumsIevade[x, y - 1]) // pirmais uz leju ir X
+                                {
+                                    KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // 1. pa labi apvelkas
+                                    KuguApkartneViss(x - 2, y, laukums, laukumsIevade); // 2. pa kreisi
+                                    KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // 1. pa kreisi
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                }
+                                if (laukums[x, y - 1] == " ") // pirmais uz leju nav
+                                {
+                                    KuguApkartneViss(x - 2, y, laukums, laukumsIevade);
+                                    KuguApkartneViss(x - 1, y, laukums, laukumsIevade);
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                    try
+                    {
+                        if (laukums[x - 3, y - 1] == " ") // 3. X uz augšu nav 
+                        {
+                            try
+                            {
+                                if (laukums[x, y - 1] == "X" && laukums[x, y - 1] == laukumsIevade[x, y - 1]) // 1. uz leju ir 
+                                {
+                                    try
+                                    {
+                                        if (laukums[x + 1, y - 1] == "X" && laukums[x + 1, y - 1] == laukumsIevade[x + 1, y - 1]) // 2. uz leju ir 
+                                        {
+                                            KuguApkartneViss(x + 2, y, laukums, laukumsIevade); // apvelk 2. uz leju
+                                            KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // apvelk 1. uz leju
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                            KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                                        }
+                                        if (laukums[x + 1, y - 1] == " ") // 2. uz leju nav
+                                        {
+                                            KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // apvelk 1 uz leju
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                            KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                                        }
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                            catch // jo 2 izmēru kuģis pašā augšējā malā
+                            {
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        if (laukums[x, y - 1] == "X" && laukums[x, y - 1] == laukumsIevade[x, y - 1]) // 1. uz leju ir 
+                        {
+                            if (laukums[x + 1, y - 1] == "X" && laukums[x + 1, y - 1] == laukumsIevade[x + 1, y - 1]) // 2. uz leju ir
+                            {
+                                KuguApkartneViss(x + 2, y, laukums, laukumsIevade); // apvelk 2. uz leju
+                                KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // apvelk 1. uz leju
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                            }
+                            if (laukums[x + 1, y - 1] == " ")
+                            {
+                                KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // apvelk 1. uz leju
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                            }
+                        }
+                    }
+                    try
+                    {
+                        if (laukums[x, y - 1] == " ") // 1. uz leju nav
+                        {
+                            try
+                            {
+                                if (laukums[x - 3, y - 1] == " ") // 2. uz augšu nav
+                                {
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade); // sašautais
+                                    KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // 1. pa kreisi
+                                }
+                            }
+                            catch // pie augšējās malas
+                            {
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // sašautais
+                                KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // 1. uz augšu
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+
+            // vertikāli uz leju
+            try
+            {
+                if (laukums[x, y - 1] == "X" && laukums[x, y - 1] == laukumsIevade[x, y - 1]) // 1. uz leju ir
+                {
+                    try
+                    {
+                        if (laukums[x + 1, y - 1] == "X" && laukums[x + 1, y - 1] == laukumsIevade[x + 1, y - 1]) // 2. uz leju ir X
+                        {
+                            try
+                            {
+                                if (laukums[x + 2, y - 1] == "X" && laukums[x + 2, y - 1] == laukumsIevade[x + 2, y - 1]) // 3. uz leju ir X
+                                {
+                                    KuguApkartneViss(x + 3, y, laukums, laukumsIevade); // ievada visus 4
+                                    KuguApkartneViss(x + 2, y, laukums, laukumsIevade);
+                                    KuguApkartneViss(x + 1, y, laukums, laukumsIevade);
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                }
+
+                                if (laukums[x + 2, y - 1] == " ") // 4. X uz leju nav kuģis
+                                {
+                                    try
+                                    {
+                                        if (laukums[x - 2, y - 1] == "X" && laukums[x - 2, y - 1] == laukumsIevade[x - 2, y - 1]) // pirmais uz leju ir X
+                                        {
+                                            KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // 1. uz leju apvelkas
+                                            KuguApkartneViss(x + 2, y, laukums, laukumsIevade); // 2. uz leju
+                                            KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // 1. uz augšu
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                        }
+                                        if (laukums[x - 2, y - 1] == " ")
+                                        {
+                                            KuguApkartneViss(x + 2, y, laukums, laukumsIevade);
+                                            KuguApkartneViss(x + 1, y, laukums, laukumsIevade);
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        KuguApkartneViss(x + 2, y, laukums, laukumsIevade);
+                                        KuguApkartneViss(x + 1, y, laukums, laukumsIevade);
+                                        KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                if (laukums[x - 2, y - 1] == "X" && laukums[x - 2, y - 1] == laukumsIevade[x - 2, y - 1]) // pirmais uz leju ir X
+                                {
+                                    KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // 1. uz leju apvelkas
+                                    KuguApkartneViss(x + 2, y, laukums, laukumsIevade); // 2. uz leju
+                                    KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // 1. uz augšu
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);     // sašautais
+                                }
+                                if (laukums[x - 2, y - 1] == " ") // pirmais uz augšu nav
+                                {
+                                    KuguApkartneViss(x + 2, y, laukums, laukumsIevade);
+                                    KuguApkartneViss(x + 1, y, laukums, laukumsIevade);
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                    try
+                    {
+                        if (laukums[x + 1, y - 1] == " ") // 2. X uz leju nav 
+                        {
+                            try
+                            {
+                                if (laukums[x - 2, y - 1] == "X" && laukums[x - 2, y - 1] == laukumsIevade[x - 2, y - 1]) // 1. uz augšu ir 
+                                {
+                                    try
+                                    {
+                                        if (laukums[x - 3, y - 1] == "X" && laukums[x - 3, y - 1] == laukumsIevade[x - 3, y - 1]) // 2. uz augšu ir 
+                                        {
+                                            KuguApkartneViss(x - 2, y, laukums, laukumsIevade); // apvelk 2. uz augšu
+                                            KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // apvelk 1. uz leju
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                            KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                                        }
+                                        if (laukums[x - 3, y - 1] == " ") // 2. uz leju nav
+                                        {
+                                            KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // apvelk 1 uz leju
+                                            KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                            KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                                        }
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                            catch // jo 2 izmēru kuģis pašā augšējā malā
+                            {
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // un 1. uz leju
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        if (laukums[x - 2, y - 1] == "X" && laukums[x - 2, y - 1] == laukumsIevade[x - 2, y - 1]) // 1. uz augšu ir 
+                        {
+                            if (laukums[x - 3, y - 1] == "X" && laukums[x - 3, y - 1] == laukumsIevade[x - 3, y - 1]) // 2. uz augšu ir
+                            {
+                                KuguApkartneViss(x - 2, y, laukums, laukumsIevade); // apvelk 2. uz augšu
+                                KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // apvelk 1. uz leju
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                            }
+                            if (laukums[x - 3, y - 1] == " ")
+                            {
+                                KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // apvelk 1. uz leju
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // apvelk arī sašauto
+                                KuguApkartneViss(x - 1, y, laukums, laukumsIevade); // un 1. uz augšu
+                            }
+                        }
+                    }
+                    try
+                    {
+                        if (laukums[x - 2, y - 1] == " ") // 1. uz augšu nav
+                        {
+                            try
+                            {
+                                if (laukums[x + 1, y - 1] == " ") // 2. uz leju nav
+                                {
+                                    KuguApkartneViss(x, y, laukums, laukumsIevade); // sašautais
+                                    KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // 1. uz leju
+                                }
+                            }
+                            catch // pie apakšējās malas
+                            {
+                                KuguApkartneViss(x, y, laukums, laukumsIevade); // sašautais
+                                KuguApkartneViss(x + 1, y, laukums, laukumsIevade); // 1. uz leju
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+
+            /*
+            else
+            {
+                KuguApkartneViss(x, y, laukums, laukumsIevade);
+            }
+            */
+        }
+
+        public static void KuguApkartneViss(int x, int y, String[,] laukums, String[,] laukumsIevade)
+        {
+            try
+            {
+                if (laukums[x - 2, y - 2] == " ")
+                {
+                    laukumsIevade[x - 2, y - 2] = "O";
+                }
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                if (laukums[x - 2, y - 1] == " ")
+                {
+                    laukumsIevade[x - 2, y - 1] = "O";
+                }
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                if (laukums[x - 2, y] == " ")
+                {
+                    laukumsIevade[x - 2, y] = "O";
+                }
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                if (laukums[x - 1, y - 2] == " ")
+                {
+                    laukumsIevade[x - 1, y - 2] = "O";
+                }
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                if (laukums[x - 1, y] == " ")
+                {
+                    laukumsIevade[x - 1, y] = "O";
+                }
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                if (laukums[x, y - 2] == " ")
+                {
+                    laukumsIevade[x, y - 2] = "O";
+                }
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                if (laukums[x, y - 1] == " ")
+                {
+                    laukumsIevade[x, y - 1] = "O";
+                }
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                if (laukums[x, y] == " ")
+                {
+                    laukumsIevade[x, y] = "O";
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
     }
 }
