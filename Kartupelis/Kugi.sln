@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kartupelis", "Kartupelis\Kartupelis.csproj", "{C2B860E3-ECA8-406D-BE31-3E61A0A4C303}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kugi", "Kartupelis\Kugi.csproj", "{C2B860E3-ECA8-406D-BE31-3E61A0A4C303}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

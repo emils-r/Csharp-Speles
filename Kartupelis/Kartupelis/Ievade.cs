@@ -439,7 +439,7 @@ namespace Kugi
 
             Console.WriteLine("\n\n***************************************");
             Console.WriteLine("********   " + vards + " sauj   ********\n");
-            Console.WriteLine("Līdz šim " + vards + "sašāvis:\n");
+            Console.WriteLine("Līdz šim " + vards + " sašāvis:\n");
             Laukumi.Laukums(laukumsIevade); // parāda līdzšinējo laukumu pirms šaušanas
 
             int x = 0; // koordinātas šāvieniem
@@ -568,12 +568,12 @@ namespace Kugi
                 {
                     if (laukumsIevade[x - 1, y - 1] == " ")
                     {
-                        laukumsIevade[x - 1, y - 1] = "O"; // ja netrāpa - Ievades laukumu aizvieto ar O
+                        laukumsIevade[x - 1, y - 1] = "o"; // ja netrāpa - Ievades laukumu aizvieto ar O
                         trapijums = false;
 
                         Console.WriteLine("\n***   " + nr + ". spēlētājs netrāpa   ***\n");
                     }
-                    else if (laukumsIevade[x - 1, y - 1] == "O")
+                    else if (laukumsIevade[x - 1, y - 1] == "o")
                     {
                         Console.WriteLine("\nŠis lauciņš jau ir sašauts! Izvēlies citu!");
 
@@ -1362,7 +1362,7 @@ namespace Kugi
             {
                 if (laukums[x - 2, y - 2] == " ")
                 {
-                    laukumsIevade[x - 2, y - 2] = "O";
+                    laukumsIevade[x - 2, y - 2] = "o";
                 }
             }
             catch
@@ -1373,7 +1373,7 @@ namespace Kugi
             {
                 if (laukums[x - 2, y - 1] == " ")
                 {
-                    laukumsIevade[x - 2, y - 1] = "O";
+                    laukumsIevade[x - 2, y - 1] = "o";
                 }
             }
             catch
@@ -1384,7 +1384,7 @@ namespace Kugi
             {
                 if (laukums[x - 2, y] == " ")
                 {
-                    laukumsIevade[x - 2, y] = "O";
+                    laukumsIevade[x - 2, y] = "o";
                 }
             }
             catch
@@ -1395,7 +1395,7 @@ namespace Kugi
             {
                 if (laukums[x - 1, y - 2] == " ")
                 {
-                    laukumsIevade[x - 1, y - 2] = "O";
+                    laukumsIevade[x - 1, y - 2] = "o";
                 }
             }
             catch
@@ -1406,7 +1406,7 @@ namespace Kugi
             {
                 if (laukums[x - 1, y] == " ")
                 {
-                    laukumsIevade[x - 1, y] = "O";
+                    laukumsIevade[x - 1, y] = "o";
                 }
             }
             catch
@@ -1417,7 +1417,7 @@ namespace Kugi
             {
                 if (laukums[x, y - 2] == " ")
                 {
-                    laukumsIevade[x, y - 2] = "O";
+                    laukumsIevade[x, y - 2] = "o";
                 }
             }
             catch
@@ -1428,7 +1428,7 @@ namespace Kugi
             {
                 if (laukums[x, y - 1] == " ")
                 {
-                    laukumsIevade[x, y - 1] = "O";
+                    laukumsIevade[x, y - 1] = "o";
                 }
             }
             catch
@@ -1439,7 +1439,7 @@ namespace Kugi
             {
                 if (laukums[x, y] == " ")
                 {
-                    laukumsIevade[x, y] = "O";
+                    laukumsIevade[x, y] = "o";
                 }
             }
             catch
